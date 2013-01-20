@@ -172,6 +172,7 @@
 
       this.isScrolling = null
       this.touching = true
+      this.deltaX = 0
 
       bind(document, 'touchmove', this.ontouchmove)
       bind(document, 'touchend', this.ontouchend)
@@ -201,10 +202,8 @@
         e.preventDefault()
 
         // increase resistance if first or last slide
-        this.deltaX = 
-          this.deltaX / ( (!this.index && this.deltaX > 0 || this.index == this.length - 1 && this.deltaX < 0 ) ?                      
-           ( abs(this.deltaX) / this.width + 1 )  : 
-           1 )
+        this.deltaX /= ( (!this.index && this.deltaX > 0 || this.index == this.length - 1 && this.deltaX < 0 ) ?                      
+           ( abs(this.deltaX) / this.width + 1.8 )  : 1 )
         this.to = this.deltaX - this.index * this.width
       }
       e.stopPropagation()
@@ -216,7 +215,7 @@
 
       // determine if slide attempt triggers next/prev slide
       var isValidSlide = +new Date() - this.start.time < 250 &&
-            abs(this.deltaX) > 20 ||
+            abs(this.deltaX) > 40 ||
             abs(this.deltaX) > this.width/2,
 
           isPastBounds = !this.index && this.deltaX > 0 || 
