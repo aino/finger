@@ -14,7 +14,7 @@ We use requestAnimationFrame for the optimal 60fps animation and integrated easi
 Usage
 -----
 
-Example markup::
+Example markup:
 
     <div id="swipe">
       <div class="pages">
@@ -23,7 +23,7 @@ Example markup::
       </div>
     </div>
 
-Initializing the script::
+Initializing the script:
 
 	// using vanilla JS
     new Finger(document.getElementById('swipe'), options)
