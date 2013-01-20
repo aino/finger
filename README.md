@@ -5,7 +5,7 @@ Finger is a microweight swipe script that simulates native physics on touch devi
 
 As ever so often, we where looking around for a really simple script that does one thing right – enable swiping between pages or images with a true native "feel" to it. There are a lot of swipe scripts around, but most of them feel "off" when swiping and they often add unnecessary CSS rules, desktop browser support, APIs and other stuff that we can do ourself.
 
-Finger adds page-flicking capability to any child element with a true native feel. There are no dependencies – you can use it as is without any library. There is no API or markup/CSS preferences, just a really small script that allows one child element to be swiped in pages based on it’s parent’s size.
+**Finger** adds page-flicking capability to any child element with a true native feel. There are no dependencies – you can use it as is without any library. There is no API or markup/CSS preferences, just a really small script that allows one child element to be swiped in pages based on it’s parent’s size.
 
 It does not add swiping capabilities to mouse-based browsers, only touch events are supported.
 
@@ -32,6 +32,17 @@ Initializing the script:
 
     // using jQuery
     $('#swipe').finger(options)
+
+Options
+-------
+
+Just a few:
+
+* `start` - sets the starting index (default 0)
+* `duration` - sets the animation duration in ms (default 240)
+* `easing` - sets the animation easing function, defaults to easeOutQuart
+* `onchange(index)` - callback that fires whenever a page is changed. `index` is the new page.
+
 
 Device support
 --------------

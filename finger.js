@@ -79,6 +79,7 @@
     this.config = {
       start: 0,
       duration: 240,
+      onchange: function() {},
       easing: function(x,t,b,c,d) {
         return -c * ((t=t/d-1)*t*t*t - 1) + b // easeOutQuart
       }
@@ -231,6 +232,9 @@
     },
 
     show: function( index ) {
+      if ( index != this.index ) {
+        this.config.onchange.call(this, index)
+      }
       this.to = -( index*this.width )
       this.index = index
     },
