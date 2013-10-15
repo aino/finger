@@ -1,4 +1,4 @@
-// finger.js (c) Aino 2013-01-20
+// finger.js (c) Aino 2013-10-15
 // GPL License
 
 (function(window) {
@@ -12,7 +12,7 @@
   // test for translate3d support
   var has3d = (function() {
 
-    var el = document.createElement('p'), 
+    var el = document.createElement('p'),
         has3d,
         t = ['webkit','O','ms','Moz',''], s, i=0, a = 'transform'
 
@@ -30,11 +30,11 @@
     return (has3d !== undefined && has3d.length > 0 && has3d !== "none")
 
   }())
-  
+
   // get element width, also works for phoneGap etc
   var getWidth = function(elem) {
 
-    var w = Math.ceil( ("getBoundingClientRect" in elem) ? 
+    var w = Math.ceil( ("getBoundingClientRect" in elem) ?
       elem.getBoundingClientRect().width :
       elem.offsetWidth )
 
@@ -56,11 +56,11 @@
   // request animation shim
   var requestFrame = (function(){
     var r = 'RequestAnimationFrame'
-    return window.requestAnimationFrame || 
-           window['webkit'+r] || 
-           window['moz'+r] || 
-           window['o'+r] || 
-           window['ms'+r] || 
+    return window.requestAnimationFrame ||
+           window['webkit'+r] ||
+           window['moz'+r] ||
+           window['o'+r] ||
+           window['ms'+r] ||
            function( callback ) {
              window.setTimeout(callback, 1000 / 60)
            }
@@ -74,12 +74,13 @@
     if ( !document.addEventListener || !Array.prototype.forEach )  {
       return
     }
-    
+
     // default options
     this.config = {
       start: 0,
-      duration: 240,
+      duration: 340,
       onchange: function() {},
+      oncomplete: function() {},
       easing: function(x,t,b,c,d) {
         return -c * ((t=t/d-1)*t*t*t - 1) + b // easeOutQuart
       }
@@ -124,7 +125,7 @@
     this.setX = function() {
 
       var style = self.child.style
-      
+
       if (!has3d) {
         // this is actually faster than CSS3 translate
         return style.left = self.pos+'px'
@@ -190,8 +191,8 @@
 
       // determine if scrolling test has run - one time test
       if ( this.isScrolling === null ) {
-        this.isScrolling = !!( 
-          this.isScrolling || 
+        this.isScrolling = !!(
+          this.isScrolling ||
           abs(this.deltaX) < abs(touch[0].pageY - this.start.pageY)
         )
       }
@@ -199,11 +200,11 @@
       // if user is not trying to scroll vertically
       if (!this.isScrolling) {
 
-        // prevent native scrolling 
+        // prevent native scrolling
         e.preventDefault()
 
         // increase resistance if first or last slide
-        this.deltaX /= ( (!this.index && this.deltaX > 0 || this.index == this.length - 1 && this.deltaX < 0 ) ?                      
+        this.deltaX /= ( (!this.index && this.deltaX > 0 || this.index == this.length - 1 && this.deltaX < 0 ) ?
            ( abs(this.deltaX) / this.width + 1.8 )  : 1 )
         this.to = this.deltaX - this.index * this.width
       }
@@ -219,7 +220,7 @@
             abs(this.deltaX) > 40 ||
             abs(this.deltaX) > this.width/2,
 
-          isPastBounds = !this.index && this.deltaX > 0 || 
+          isPastBounds = !this.index && this.deltaX > 0 ||
             this.index == this.length - 1 && this.deltaX < 0
 
       // if not scrolling vertically
@@ -240,20 +241,23 @@
     },
 
     loop: function() {
-      
+
       var distance = this.to - this.pos
 
       // if distance is short or the user is touching, do a 1-1 animation
       if ( this.touching || abs(distance) <= 1 ) {
         this.pos = this.to
+        if ( this.anim ) {
+          this.config.oncomplete( this.index )
+        }
         this.anim = 0
       } else {
-        if ( !this.anim ) {
-          // save animation parameters
-          this.anim = { v: this.pos, c: distance, t: 0 }
-        }
-        // apply easing
-        this.pos = this.config.easing(null, this.anim.t++, this.anim.v, this.anim.c, (this.config.duration/10))
+          if ( !this.anim ) {
+              // save animation parameters
+              this.anim = { v: this.pos, c: distance, t: +new Date() }
+          }
+          // apply easing
+          this.pos = this.config.easing(null, +new Date() - this.anim.t, this.anim.v, this.anim.c, this.config.duration)
       }
       this.setX()
     }

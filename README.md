@@ -42,6 +42,7 @@ Just a few:
 * `duration` - sets the animation duration in ms (default 240)
 * `easing` - sets the animation easing function, defaults to easeOutQuart
 * `onchange(index)` - callback that fires whenever a page is changed. `index` is the new page.
+* `oncomplete(index)` - callback that fires whenever a new page is showing and the animation is complete. `index` is the new page.
 
 
 Device support
